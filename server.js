@@ -2,6 +2,9 @@ const express = require('express')
 
 const server = express()
 
+const staticMiddleware = express.static('public')
+server.use(staticMiddleware)
+
 server.get('/', (request, response) => {
   response.send(`<html>
     <head>
@@ -42,6 +45,27 @@ server.get('/', (request, response) => {
       </div>
     </body>
   </html>`)
+})
+
+server.get('/logans', (request, response) => {
+  response.send(`<div>
+    <h1>Logan's Run</h1>
+    <p>Very good if you like campy sci-fi</p>
+  </div>`)
+})
+
+const reviews = {
+  twilight: 'Honestly, the TV show is way better!',
+  logans: 'Very good, if you like campy sci-fi...'
+}
+
+// Server Side Rendering (SSR)
+server.get('/reviews/:movie', (request, response) => {
+  const html = `
+    <h1>Your review is:</h1>
+    <p>${reviews[request.params.movie]}</p>
+  `
+  response.send(html)
 })
 
 const PORT = 4000
