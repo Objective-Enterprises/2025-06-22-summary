@@ -2,49 +2,14 @@ const express = require('express')
 
 const server = express()
 
+server.set('views', 'views')
+server.set('view engine', 'ejs')
+
 const staticMiddleware = express.static('public')
 server.use(staticMiddleware)
 
 server.get('/', (request, response) => {
-  response.send(`<html>
-    <head>
-      <title>My Movie Website</title>
-      <style>
-        h1 {
-          color: red;
-        }
-      </style>
-      <script>
-        const heading = document.getElementById('title')
-        heading.addEventListener('click', () => {
-          console.log('test')
-        })
-      </script>
-    </head>
-    <body>
-      <div>
-        <h1 id='title'>My Movie Website</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Stars</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>The Twilight Zone (1985)</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>Logan's Run</td>
-              <td>3</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </body>
-  </html>`)
+  response.render('index')
 })
 
 server.get('/logans', (request, response) => {
@@ -61,11 +26,10 @@ const reviews = {
 
 // Server Side Rendering (SSR)
 server.get('/reviews/:movie', (request, response) => {
-  const html = `
-    <h1>Your review is:</h1>
-    <p>${reviews[request.params.movie]}</p>
-  `
-  response.send(html)
+  response.render('review', {
+    title: request.params.movie,
+    review: reviews[request.params.movie]
+  })
 })
 
 const PORT = 4000
